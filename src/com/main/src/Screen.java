@@ -50,8 +50,9 @@ public class Screen extends JPanel {
 //		this.add(b);
 //		f.getRootPane().setDefaultButton(b);
 		
-		//Press "Q" to exit the window
+		//Press "Q" or "ESC" to exit the window
 		this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), EXIT);	
+		this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), EXIT);	
 		this.getActionMap().put(EXIT, exit);
 		
 //		Uncomment to get a tool tip about mouse position
@@ -68,8 +69,7 @@ public class Screen extends JPanel {
 	}
 
 	private void display() {
-		GraphicsEnvironment env = GraphicsEnvironment
-				.getLocalGraphicsEnvironment();
+		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice dev = env.getDefaultScreenDevice();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setBackground(Color.darkGray);
