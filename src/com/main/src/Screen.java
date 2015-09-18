@@ -9,17 +9,23 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+
+import marvin.gui.MarvinImagePanel;
+import marvin.image.MarvinImage;
+import marvin.io.MarvinImageIO;
 
 public class Screen extends JPanel {
 
@@ -27,8 +33,21 @@ public class Screen extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	public static final long timeDelay = 5000;    //Time spent on each photo in milliseconds
+	
+	
 	private static final String EXIT = "Exit";
-	private JFrame f = new JFrame("FullScreenTest");
+	private static JFrame f = new JFrame("FullScreenTest");
+	private static MarvinImagePanel imagePanel;
+	private static MarvinImage[] images;
+	private String[] names = new String[]{"1RyLFUf.jpg",
+										 "4PC1oo9.jpg",
+										 "o8MXbZK.jpg",
+										 "yluW6Wn.jpg",
+										};
+	private static int count = 0;
+	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	private Action exit = new AbstractAction(EXIT) {
 
 		/**
@@ -68,9 +87,10 @@ public class Screen extends JPanel {
 		*/
 	}
 
-	private void display() {
+	private void display() throws IOException {
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice dev = env.getDefaultScreenDevice();
+		
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setBackground(Color.darkGray);
 		f.setResizable(false);
@@ -81,9 +101,45 @@ public class Screen extends JPanel {
 		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0,0) , "blank");
 		f.getContentPane().setCursor(blankCursor);
 		
-		f.add(this);
+		f.add(this);		
 		f.pack();
+		
+		imagePanel = new MarvinImagePanel();
+		f.add(imagePanel);
+
+		images = new MarvinImage[names.length];
+		
+		int i = 0;
+		for(String s : names){
+			images[i] = MarvinImageIO.loadImage(Screen.class.getResource("../res/"+s).getPath());
+			i++;
+		}
+		
+		
+	
 		dev.setFullScreenWindow(f);
+		
+		updateImage();
+		startShow();
+
+}
+	
+	public static void startShow(){
+
+		final Runnable tick = new Runnable() {
+			public void run() { updateImage(); }					
+		};
+		
+		final ScheduledFuture<?> tickHandle = scheduler.scheduleAtFixedRate(tick, timeDelay, timeDelay, TimeUnit.MILLISECONDS);
+
+		System.out.println("Goodbye!");
+
+	}
+	
+	public static void updateImage(){		
+		if(count >= images.length) count = 0;
+		imagePanel.setImage(images[count]);
+		count++;
 	}
 
 	public static void main(String[] args) {
@@ -91,7 +147,12 @@ public class Screen extends JPanel {
 
 			@Override
 			public void run() {
-				new Screen().display();
+				try {
+					new Screen().display();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 	}

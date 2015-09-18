@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="marvin/framework/|marvin/|marvin/framework/|marvin/plugins/image/|marvin/lib/|marvin/plugins/" kind="src" path="src"/>
+	<classpathentry excluding="framework/|plugins/image/|lib/|plugins/" kind="src" path="src/marvin"/>
+	<classpathentry kind="src" path="src/marvin/framework"/>
+	<classpathentry kind="src" path="src/marvin/plugins/image"/>
+	<classpathentry kind="src" path="src/marvin/lib"/>
+	<classpathentry excluding="image/" kind="src" path="src/marvin/plugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="src/marvin/framework/marvin_1.5.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
