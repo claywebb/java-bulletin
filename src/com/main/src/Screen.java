@@ -11,7 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -35,16 +37,18 @@ public class Screen extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	public static final long timeDelay = 5000;    //Time spent on each photo in milliseconds
+	public static final String dirPath = "";	// The directory of the images you want to load
 	
+	public static final String[] extensions = {"jpg", "jpeg", "gif", "png"};	//Approved Extensions
 	
 	private static final String EXIT = "Exit";
 	private static JFrame f = new JFrame("FullScreenTest");
 	private static MarvinImagePanel imagePanel;
 	private static MarvinImage[] images;
-	private String[] names = new String[]{"1RyLFUf.jpg",
-										 "4PC1oo9.jpg",
-										 "o8MXbZK.jpg",
-										 "yluW6Wn.jpg",
+	private static String[] paths = new String[]{Screen.class.getResource("../res/1RyLFUf.jpg").getPath(),
+												Screen.class.getResource("../res/4PC1oo9.jpg").getPath(),
+												Screen.class.getResource("../res/o8MXbZK.jpg").getPath(),
+												Screen.class.getResource("../res/yluW6Wn.jpg").getPath()
 										};
 	private static int count = 0;
 	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -61,18 +65,17 @@ public class Screen extends JPanel {
 		}
 	};
 
-//	private JButton b = new JButton(exit);
 
-	public Screen() {
-		
-//		Uncomment to add a exit button	
-//		this.add(b);
-//		f.getRootPane().setDefaultButton(b);
+	public Screen() throws IOException {
 		
 		//Press "Q" or "ESC" to exit the window
 		this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), EXIT);	
 		this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), EXIT);	
 		this.getActionMap().put(EXIT, exit);
+		
+		//update the paths with the images in the listed directory
+		updateImageArray();
+
 		
 //		Uncomment to get a tool tip about mouse position
 		/*
@@ -88,6 +91,7 @@ public class Screen extends JPanel {
 	}
 
 	private void display() throws IOException {
+		//Configure the display
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice dev = env.getDefaultScreenDevice();
 		
@@ -103,15 +107,17 @@ public class Screen extends JPanel {
 		
 		f.add(this);		
 		f.pack();
-		
+			
+		//create a new image panel for all of the images
 		imagePanel = new MarvinImagePanel();
 		f.add(imagePanel);
 
-		images = new MarvinImage[names.length];
+		images = new MarvinImage[paths.length];
 		
 		int i = 0;
-		for(String s : names){
-			images[i] = MarvinImageIO.loadImage(Screen.class.getResource("../res/"+s).getPath());
+		for(String s : paths){
+			//Convert the paths into images and load them into an array
+			images[i] = MarvinImageIO.loadImage(s);
 			i++;
 		}
 		
@@ -119,7 +125,6 @@ public class Screen extends JPanel {
 	
 		dev.setFullScreenWindow(f);
 		
-		updateImage();
 		startShow();
 
 }
@@ -130,16 +135,52 @@ public class Screen extends JPanel {
 			public void run() { updateImage(); }					
 		};
 		
-		final ScheduledFuture<?> tickHandle = scheduler.scheduleAtFixedRate(tick, timeDelay, timeDelay, TimeUnit.MILLISECONDS);
+		//start a scheduled task to update the image
+		@SuppressWarnings("unused")
+		final ScheduledFuture<?> tickHandle = scheduler.scheduleAtFixedRate(tick, 0, timeDelay, TimeUnit.MILLISECONDS);
 
 		System.out.println("Goodbye!");
 
 	}
 	
-	public static void updateImage(){		
+	public static void updateImage(){
 		if(count >= images.length) count = 0;
 		imagePanel.setImage(images[count]);
 		count++;
+	}
+	
+	public static void updateImageArray() throws IOException{
+		ArrayList<String> files = new ArrayList<String>();
+		
+		//get the directory
+		File dir = new File(dirPath);
+		
+		//Check if dir is a directory
+		if (!dir.isDirectory()){ System.out.println(dirPath + " is not a directory!"); return; }
+		
+		//Create an array of all the files in the directory
+		File[] dirList = dir.listFiles();
+		
+		for(File f : dirList){
+			//Check if the file is a image
+			if (f != null && isImage(f.getName())){
+				files.add(f.getCanonicalPath());
+				System.out.println("Added " + f.getName() + " to file list!");
+			}
+		}
+		
+		//Update the paths array
+		String[] temp = new String[files.size()];
+		temp = files.toArray(temp);
+		paths = temp;
+	}
+	
+	public static boolean isImage(String s){
+		//if the path ends with any of the approved extensions, return true
+		for(String e : extensions){
+			if (s.endsWith("." + e)) return true;
+		}
+		return false;
 	}
 
 	public static void main(String[] args) {
@@ -150,7 +191,6 @@ public class Screen extends JPanel {
 				try {
 					new Screen().display();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
