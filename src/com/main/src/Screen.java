@@ -25,6 +25,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
+import com.aspose.slides.ISlide;
+import com.aspose.slides.Presentation;
+
 import marvin.gui.MarvinImagePanel;
 import marvin.image.MarvinImage;
 import marvin.io.MarvinImageIO;
@@ -36,7 +39,7 @@ public class Screen extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final long timeDelay = 5000;    //Time spent on each photo in milliseconds
+	public static final long timeDelay = 1000;    //Time spent on each photo in milliseconds
 	public static final String dirPath = "";	// The directory of the images you want to load
 	
 	public static final String[] extensions = {"jpg", "jpeg", "gif", "png"};	//Approved Extensions
@@ -112,16 +115,26 @@ public class Screen extends JPanel {
 		imagePanel = new MarvinImagePanel();
 		f.add(imagePanel);
 
-		images = new MarvinImage[paths.length];
+		ArrayList<MarvinImage> tempImages = new ArrayList<MarvinImage>();
 		
-		int i = 0;
 		for(String s : paths){
 			//Convert the paths into images and load them into an array
-			images[i] = MarvinImageIO.loadImage(s);
-			i++;
+			if(isImage(s))
+				tempImages.add(MarvinImageIO.loadImage(s));
+			
+			if(isPowerPoint(s)){
+				ArrayList<BufferedImage> imgs = getImagesFromPowerPoint(s);
+				
+				for(BufferedImage b : imgs){
+					tempImages.add(new MarvinImage(b));
+				}
+			}
 		}
 		
-		
+		MarvinImage[] temp = new MarvinImage[tempImages.size()];
+		temp = tempImages.toArray(temp);
+		images = temp;
+
 	
 		dev.setFullScreenWindow(f);
 		
@@ -163,7 +176,7 @@ public class Screen extends JPanel {
 		
 		for(File f : dirList){
 			//Check if the file is a image
-			if (f != null && isImage(f.getName())){
+			if (f != null && (isImage(f.getName())||(isPowerPoint(f.getName())))){
 				files.add(f.getCanonicalPath());
 				System.out.println("Added " + f.getName() + " to file list!");
 			}
@@ -181,6 +194,33 @@ public class Screen extends JPanel {
 			if (s.endsWith("." + e)) return true;
 		}
 		return false;
+	}
+	
+	public static boolean isPowerPoint(String s){
+		if ((s.endsWith(".pptx"))||(s.endsWith(".ppt"))){
+			return true;
+		}
+		return false;
+	}
+	
+	public static ArrayList<BufferedImage> getImagesFromPowerPoint(String s){
+		Presentation pres = new Presentation(s);
+		ArrayList<BufferedImage> imgs = new ArrayList<BufferedImage>();
+		
+		int width = 1920;
+		int height = 1080;
+		
+		float scaledWidth = (float)(1.0 / pres.getSlideSize().getSize().getWidth())*width;
+		float scaledHeight = (float)(1.0 / pres.getSlideSize().getSize().getHeight())*height;
+		
+		for (int i = 0; i < pres.getSlides().size(); i++){
+			ISlide sld = pres.getSlides().get_Item(i);
+			BufferedImage image = sld.getThumbnail(scaledWidth, scaledHeight);
+			
+			imgs.add(image);
+		}
+		
+		return imgs;
 	}
 
 	public static void main(String[] args) {
