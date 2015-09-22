@@ -49,7 +49,7 @@ public class Screen extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	public static final long timeDelay = 1000; // Time spent on each photo in milliseconds
-	public static final String dirPath = "C:/Users/Clayton/Desktop/pics/"; // The directory of the images you want to load
+	public static final String dirPath = ""; // The directory of the images you want to load
 
 	public static final String[] extensions = { "jpg", "jpeg", "gif", "png" }; // Approved Extensions
 	
@@ -102,7 +102,7 @@ public class Screen extends JPanel {
 		GraphicsDevice dev = env.getDefaultScreenDevice();
 
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setBackground(Color.darkGray);
+		f.setBackground(Color.BLACK);
 		f.setResizable(false);
 		f.setUndecorated(true);
 
@@ -248,14 +248,10 @@ public class Screen extends JPanel {
 						pgsize.height, BufferedImage.TYPE_INT_ARGB);
 
 				Graphics2D graphics = img.createGraphics();
-				graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-						RenderingHints.VALUE_ANTIALIAS_ON);
-				graphics.setRenderingHint(RenderingHints.KEY_RENDERING,
-						RenderingHints.VALUE_RENDER_QUALITY);
-				graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-						RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-				graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
-						RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+				graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+				graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+				graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
 				graphics.setColor(Color.white);
 				graphics.clearRect(0, 0, pgsize.width, pgsize.height);
