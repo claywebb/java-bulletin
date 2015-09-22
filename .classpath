@@ -8,6 +8,12 @@
 	<classpathentry excluding="image/" kind="src" path="src/marvin/plugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="src/marvin/framework/marvin_1.5.1.jar"/>
-	<classpathentry kind="lib" path="aspose.slides-15.7.0.jar" sourcepath="aspose.slides-15.7.0.jar"/>
+	<classpathentry kind="lib" path="poi-scratchpad-3.13-beta1-20150723.jar"/>
+	<classpathentry kind="lib" path="poi-3.13-beta1-20150723.jar"/>
+	<classpathentry kind="lib" path="poi-examples-3.13-beta1-20150723.jar"/>
+	<classpathentry kind="lib" path="poi-excelant-3.13-beta1-20150723.jar"/>
+	<classpathentry kind="lib" path="poi-ooxml-3.13-beta1-20150723.jar"/>
+	<classpathentry kind="lib" path="poi-ooxml-schemas-3.13-beta1-20150723.jar"/>
+	<classpathentry kind="lib" path="xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
