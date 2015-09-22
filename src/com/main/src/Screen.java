@@ -47,8 +47,10 @@ public class Screen extends JPanel {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static final String VERSION = "0.9.0 beta";
 
-	public static final long timeDelay = 1000; // Time spent on each photo in milliseconds
+	public static final long timeDelay = 5000; // Time spent on each photo in milliseconds
 	public static final String dirPath = ""; // The directory of the images you want to load
 
 	public static final String[] extensions = { "jpg", "jpeg", "gif", "png" }; // Approved Extensions
@@ -168,9 +170,10 @@ public class Screen extends JPanel {
 		};
 
 		// start a scheduled task to update the image
+		updateImage();
 		@SuppressWarnings("unused")
 		final ScheduledFuture<?> tickHandle = scheduler.scheduleAtFixedRate(
-				tick, 0, timeDelay, TimeUnit.MILLISECONDS);
+				tick, timeDelay, timeDelay, TimeUnit.MILLISECONDS);
 
 		System.out.println("Goodbye!");
 
@@ -332,5 +335,9 @@ public class Screen extends JPanel {
 				}
 			}
 		});
+	}
+	
+	public static String getVersion(){
+		return VERSION;
 	}
 }

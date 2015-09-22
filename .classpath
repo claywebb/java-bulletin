@@ -10,7 +10,6 @@
 	<classpathentry kind="lib" path="src/marvin/framework/marvin_1.5.1.jar"/>
 	<classpathentry kind="lib" path="poi-scratchpad-3.13-beta1-20150723.jar"/>
 	<classpathentry kind="lib" path="poi-3.13-beta1-20150723.jar"/>
-	<classpathentry kind="lib" path="poi-examples-3.13-beta1-20150723.jar"/>
 	<classpathentry kind="lib" path="poi-excelant-3.13-beta1-20150723.jar"/>
 	<classpathentry kind="lib" path="poi-ooxml-3.13-beta1-20150723.jar"/>
 	<classpathentry kind="lib" path="poi-ooxml-schemas-3.13-beta1-20150723.jar"/>
