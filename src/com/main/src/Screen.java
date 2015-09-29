@@ -1,3 +1,6 @@
+// java-bulletin written for Walsh Jesuit High School
+// Copyright (c) 2015 Clayton Webb
+
 package com.main.src;
 
 import java.awt.Color;
@@ -43,12 +46,9 @@ import org.apache.poi.xslf.usermodel.XSLFSlide;
 
 public class Screen extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	private static final String VERSION = "0.9.0 beta";
+	private static final String VERSION = "1.0.0";
 
 	public static final long timeDelay = 5000; // Time spent on each photo in milliseconds
 	public static final String dirPath = ""; // The directory of the images you want to load
@@ -69,13 +69,10 @@ public class Screen extends JPanel {
 			Screen.class.getResource("../res/o8MXbZK.jpg").getPath(),
 			Screen.class.getResource("../res/yluW6Wn.jpg").getPath() };
 	private static int count = 0;
-	private final static ScheduledExecutorService scheduler = Executors
-			.newScheduledThreadPool(1);
+	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+	
 	private Action exit = new AbstractAction(EXIT) {
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 
 		@Override
@@ -88,8 +85,7 @@ public class Screen extends JPanel {
 
 		// Press "Q" or "ESC" to exit the window
 		this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0), EXIT);
-		this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-				EXIT);
+		this.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), EXIT);
 		this.getActionMap().put(EXIT, exit);
 
 		// update the paths with the images in the listed directory
@@ -99,8 +95,7 @@ public class Screen extends JPanel {
 
 	private void display() throws IOException {
 		// Configure the display
-		GraphicsEnvironment env = GraphicsEnvironment
-				.getLocalGraphicsEnvironment();
+		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice dev = env.getDefaultScreenDevice();
 
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -109,10 +104,8 @@ public class Screen extends JPanel {
 		f.setUndecorated(true);
 
 		// Hide Cursor
-		BufferedImage cursorImg = new BufferedImage(16, 16,
-				BufferedImage.TYPE_INT_ARGB);
-		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-				cursorImg, new Point(0, 0), "blank");
+		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "blank");
 		f.getContentPane().setCursor(blankCursor);
 
 		f.add(this);
@@ -133,8 +126,7 @@ public class Screen extends JPanel {
 
 				File file = new File(s);
 				BufferedImage in = ImageIO.read(file);
-				BufferedImage buffImg = new BufferedImage(in.getWidth(),
-						in.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				BufferedImage buffImg = new BufferedImage(in.getWidth(), in.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
 				Graphics2D g = buffImg.createGraphics();
 				g.drawImage(in, 0, 0, null);
@@ -172,8 +164,7 @@ public class Screen extends JPanel {
 		// start a scheduled task to update the image
 		updateImage();
 		@SuppressWarnings("unused")
-		final ScheduledFuture<?> tickHandle = scheduler.scheduleAtFixedRate(
-				tick, timeDelay, timeDelay, TimeUnit.MILLISECONDS);
+		final ScheduledFuture<?> tickHandle = scheduler.scheduleAtFixedRate(tick, timeDelay, timeDelay, TimeUnit.MILLISECONDS);
 
 		System.out.println("Goodbye!");
 
@@ -203,8 +194,7 @@ public class Screen extends JPanel {
 
 		for (File f : dirList) {
 			// Check if the file is a image
-			if (f != null
-					&& (isImage(f.getName()) || (isPowerPoint(f.getName())))) {
+			if (f != null && (isImage(f.getName()) || (isPowerPoint(f.getName())))) {
 				files.add(f.getCanonicalPath());
 				System.out.println("Added " + f.getName() + " to file list!");
 			}
@@ -247,8 +237,7 @@ public class Screen extends JPanel {
 			XSLFSlide[] slide = ppt.getSlides();
 			for (int i = 0; i < slide.length; i++) {
 
-				BufferedImage img = new BufferedImage(pgsize.width,
-						pgsize.height, BufferedImage.TYPE_INT_ARGB);
+				BufferedImage img = new BufferedImage(pgsize.width, pgsize.height, BufferedImage.TYPE_INT_ARGB);
 
 				Graphics2D graphics = img.createGraphics();
 				graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -258,8 +247,7 @@ public class Screen extends JPanel {
 
 				graphics.setColor(Color.white);
 				graphics.clearRect(0, 0, pgsize.width, pgsize.height);
-				graphics.fill(new Rectangle2D.Float(0, 0, pgsize.width,
-						pgsize.height));
+				graphics.fill(new Rectangle2D.Float(0, 0, pgsize.width, pgsize.height));
 
 				// render
 				slide[i].draw(graphics);
@@ -280,23 +268,17 @@ public class Screen extends JPanel {
 			Slide[] slide = ppt.getSlides();
 			for (int i = 0; i < slide.length; i++) {
 
-				BufferedImage img = new BufferedImage(pgsize.width,
-						pgsize.height, BufferedImage.TYPE_INT_ARGB);
+				BufferedImage img = new BufferedImage(pgsize.width, pgsize.height, BufferedImage.TYPE_INT_ARGB);
 
 				Graphics2D graphics = img.createGraphics();
-				graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-						RenderingHints.VALUE_ANTIALIAS_ON);
-				graphics.setRenderingHint(RenderingHints.KEY_RENDERING,
-						RenderingHints.VALUE_RENDER_QUALITY);
-				graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-						RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-				graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
-						RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+				graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+				graphics.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+				graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+				graphics.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 
 				graphics.setColor(Color.white);
 				graphics.clearRect(0, 0, pgsize.width, pgsize.height);
-				graphics.fill(new Rectangle2D.Float(0, 0, pgsize.width,
-						pgsize.height));
+				graphics.fill(new Rectangle2D.Float(0, 0, pgsize.width, pgsize.height));
 
 				// render
 				slide[i].draw(graphics);
@@ -313,12 +295,10 @@ public class Screen extends JPanel {
 		double scaleX = (double) (WIDTH / (double) img.getWidth());
 		double scaleY = (double) (HEIGHT / (double) img.getHeight());
 
-		BufferedImage a = new BufferedImage(WIDTH, HEIGHT,
-				BufferedImage.TYPE_INT_ARGB);
+		BufferedImage a = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		AffineTransform at = new AffineTransform();
 		at.scale(scaleX, scaleY);
-		AffineTransformOp scOp = new AffineTransformOp(at,
-				AffineTransformOp.TYPE_BILINEAR);
+		AffineTransformOp scOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
 		a = scOp.filter(img, a);
 		return a;
 	}
