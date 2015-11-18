@@ -1,14 +1,13 @@
 <?php
 	// Enable Errors
-	//ini_set('display_errors', 1); 
+	//ini_set('display_errors',1); 
 	//error_reporting(E_ALL);
-	
+
 	//Set default timezone
 	date_default_timezone_set('America/New_York');
-
+	
 	// Start a session.
 	session_start();
-
 
 	// Include config file.
 	if (file_exists('includes/config.inc.php'))
@@ -33,7 +32,18 @@
 		// Class file does not exist, let's fail fast.
 		die('Config file could not be found.');
 	}
-
+	
+	// Include check file
+	if (file_exists('includes/check.inc.php')){
+		// Check file exits, require it.
+		require_once('includes/check.inc.php');
+	}
+	else
+	{
+		// Check file does not exist, let's fail fast.
+		die('Check file could not be found.');
+	}
+	
 	
 	
 	// Check if a specific page is being requested.

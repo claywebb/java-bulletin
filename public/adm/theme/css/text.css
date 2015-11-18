@@ -1,0 +1,132 @@
+@font-face {
+    font-family: ALGER;
+    src: url(../ALGER.TTF);
+}
+
+body{
+	background-color: rgb(121, 0, 0);
+	font-family: ALGER, Arial, Helvetica, sans-serif;
+	height: 100%;
+}
+
+input
+{
+    font-family: Arial;
+    text-align: center;
+}
+
+
+#headerText{
+	font-family: ALGER, Arial, Helvetica, sans-serif;
+	color: rgb(131, 0, 0);
+	font-size: 35px;
+	text-align: center;
+}
+
+.header{
+	font-family: ALGER, Arial, Helvetica, sans-serif;
+	color: rgb(121, 0, 0);
+	width: 100%;
+	font-size: 35px;
+	text-align: center;
+}
+
+/* Error Messages */
+
+#error{
+	color: #B40431;
+}
+
+
+/* Category Buttons (Links) */
+
+#button 
+{
+    min-height: 25px;
+    width: 100%;
+    display: block;
+    vertical-align: middle;
+    position: relative;
+    top: 3px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#button:link {
+	color: #6E6E6E;
+	text-decoration: none;
+}
+
+#button:visited {
+	color: #6E6E6E;
+	text-decoration: none;
+}
+
+#button:hover {
+	color: #151515;
+	text-decoration: none;
+}
+
+#button:active {
+	color: #151515;
+	text-decoration: none;
+}
+
+
+
+/* Link Styling */
+
+a:link {
+	color: #6E6E6E;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #6E6E6E;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #151515;
+	text-decoration: none;
+}
+
+a:active {
+	color: #151515;
+	text-decoration: none;
+}
+
+#logs:link {
+	color: #6E6E6E;
+	text-decoration: none;
+	font-size: 10px;
+}
+
+#logs:visited {
+	color: #6E6E6E;
+	text-decoration: none;
+	font-size: 10px;
+}
+
+#logs:hover {
+	color: #151515;
+	text-decoration: none;
+	font-size: 10px;
+}
+
+#logs:active {
+	color: #151515;
+	text-decoration: none;
+	font-size: 10px;
+}
+
+#filesBox{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+#tblHeader{
+	font-weight: bold;
+	text-align: center;
+	font-size: 15px;
+}
