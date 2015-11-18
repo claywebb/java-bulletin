@@ -307,10 +307,16 @@ public class Screen extends JPanel {
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
-
+	
 			@Override
 			public void run() {
 				try {
+					
+					if(args.length > 0){
+						int time = Integer.parseInt(args[0]);
+						if (time > 0) timeDelay = time;
+					}
+					
 					new Screen().display();
 				} catch (IOException e) {
 					e.printStackTrace();
