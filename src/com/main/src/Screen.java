@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -39,8 +40,8 @@ import javax.swing.KeyStroke;
 import marvin.gui.MarvinImagePanel;
 import marvin.image.MarvinImage;
 
-import org.apache.poi.hslf.model.Slide;
-import org.apache.poi.hslf.usermodel.SlideShow;
+import org.apache.poi.hslf.usermodel.HSLFSlide;
+import org.apache.poi.hslf.usermodel.HSLFSlideShow;
 import org.apache.poi.xslf.usermodel.XMLSlideShow;
 import org.apache.poi.xslf.usermodel.XSLFSlide;
 
@@ -48,10 +49,10 @@ public class Screen extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final String VERSION = "1.0.0";
+	private static final String VERSION = "1.0.1";
 
-	public static final long timeDelay = 5000; // Time spent on each photo in milliseconds
-	public static final String dirPath = ""; // The directory of the images you want to load
+	public static long timeDelay = 5000; // Time spent on each photo in milliseconds
+	public static String dirPath = "images"; // The directory of the images you want to load
 
 	public static final String[] extensions = { "jpg", "jpeg", "gif", "png" }; // Approved Extensions
 	
@@ -60,14 +61,15 @@ public class Screen extends JPanel {
 	public static int HEIGHT = 1080;
 
 	private static final String EXIT = "Exit";
-	private static JFrame f = new JFrame("FullScreenTest");
+	private static JFrame f = new JFrame("Walsh Bulletin");
 	private static MarvinImagePanel imagePanel;
 	private static MarvinImage[] images;
-	private static String[] paths = new String[] {
-			Screen.class.getResource("../res/1RyLFUf.jpg").getPath(),
-			Screen.class.getResource("../res/4PC1oo9.jpg").getPath(),
-			Screen.class.getResource("../res/o8MXbZK.jpg").getPath(),
-			Screen.class.getResource("../res/yluW6Wn.jpg").getPath() };
+	private static String[] paths;
+			//new String[] {
+//			Screen.class.getResource("../res/1RyLFUf.jpg").getPath(),
+//			Screen.class.getResource("../res/4PC1oo9.jpg").getPath(),
+//			Screen.class.getResource("../res/o8MXbZK.jpg").getPath(),
+//			Screen.class.getResource("../res/yluW6Wn.jpg").getPath() };
 	private static int count = 0;
 	private final static ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 	
@@ -234,8 +236,8 @@ public class Screen extends JPanel {
 
 			Dimension pgsize = ppt.getPageSize();
 
-			XSLFSlide[] slide = ppt.getSlides();
-			for (int i = 0; i < slide.length; i++) {
+			List<XSLFSlide> slide = ppt.getSlides();
+			for (int i = 0; i < slide.size(); i++) {
 
 				BufferedImage img = new BufferedImage(pgsize.width, pgsize.height, BufferedImage.TYPE_INT_ARGB);
 
@@ -250,7 +252,7 @@ public class Screen extends JPanel {
 				graphics.fill(new Rectangle2D.Float(0, 0, pgsize.width, pgsize.height));
 
 				// render
-				slide[i].draw(graphics);
+				slide.get(i).draw(graphics);
 
 				// scale save the output
 				imgs.add(scaleImage(img));
@@ -258,15 +260,15 @@ public class Screen extends JPanel {
 			return imgs;
 		} else if (s.endsWith(".ppt")) {
 			FileInputStream is = new FileInputStream(s);
-			SlideShow ppt = new SlideShow(is);
+			HSLFSlideShow ppt = new HSLFSlideShow(is);
 			is.close();
 
 			ArrayList<BufferedImage> imgs = new ArrayList<BufferedImage>();
 
 			Dimension pgsize = ppt.getPageSize();
 
-			Slide[] slide = ppt.getSlides();
-			for (int i = 0; i < slide.length; i++) {
+			List<HSLFSlide> slide = ppt.getSlides();
+			for (int i = 0; i < slide.size(); i++) {
 
 				BufferedImage img = new BufferedImage(pgsize.width, pgsize.height, BufferedImage.TYPE_INT_ARGB);
 
@@ -281,7 +283,7 @@ public class Screen extends JPanel {
 				graphics.fill(new Rectangle2D.Float(0, 0, pgsize.width, pgsize.height));
 
 				// render
-				slide[i].draw(graphics);
+				slide.get(i).draw(graphics);
 
 				// scale and save the output
 				imgs.add(scaleImage(img));
