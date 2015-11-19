@@ -49,10 +49,10 @@ public class Screen extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final String VERSION = "1.0.1";
+	private static final String VERSION = "1.0.2";
 
 	public static long timeDelay = 5000; // Time spent on each photo in milliseconds
-	public static String dirPath = "images"; // The directory of the images you want to load
+	public static String dirPath = "public/images"; // The directory of the images you want to load
 
 	public static final String[] extensions = { "jpg", "jpeg", "gif", "png" }; // Approved Extensions
 	
@@ -315,6 +315,9 @@ public class Screen extends JPanel {
 					if(args.length > 0){
 						int time = Integer.parseInt(args[0]);
 						if (time > 0) timeDelay = time;
+						if(args.length > 1){
+							dirPath = args[1];
+						}
 					}
 					
 					new Screen().display();
