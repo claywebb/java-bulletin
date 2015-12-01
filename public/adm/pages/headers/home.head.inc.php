@@ -1,17 +1,52 @@
 <?php
+	$time = "A very long and sad and lonely emptiness void";
+	
+	if(!shell_exec('ps -A | grep java')){
+		$status = "Running";
+	}else{
+		$status = "Not Running";
+	}
+
 	if(isset($_POST['delete'])){
 		$location = $dir . $_POST['delete'];
 		unlink($location);
 	}
 
 	if(isset($_POST['restart'])){
-		$pid = shell_exec('ps -A | grep sshd | awk "NR==1{print $1}"');
-		shell_exec('kill' . $pid);
-		shell_exec('java -jar ../java-bulletin.jar 500');
+		//$pid = shell_exec('ps -A | grep sshd | awk "NR==1{print $1}"');
+		if(!shell_exec('ps -A | grep java')){
+//			shell_exec('pkill -f java');
+//			shell_exec('export DISPLAY=:0.0');
+//			putenv("DISPLAY=localhost:0");
+			//shell_exec('cd ~/java-bulletin/');
+//			shell_exec('java -jar ../../java-bulletin.jar $time');
+//			shell_exec('bash /home/pi/java-bulletin/jstart');
+//			shell_exec('screen -x pi/works -p 0 -X stuff "bash /home/pi/java-bulletin/jstart \015"');
+//			shell_exec('shutdown -h now');
+
+        $connection = ssh2_connect('127.0.0.1', 22);
+        ssh2_auth_password($connection, 'pi', 'andrewclaytondonottouch');
+	$stream = ssh2_exec($connection, 'killall java');
+        $stream = ssh2_exec($connection, 'bash /home/pi/java-bulletin/jstart');
+
+		}
 	}
 	
 	if(isset($_POST['start'])){
-		shell_exec('java -jar ../java-bulletin.jar 500');
+		if(!shell_exec('ps -A | grep java')){
+			$time = $_POST['time'];
+//		shell_exec('export DISPLAY=:0.0');
+//		putenv("DISPLAY=localhost:0");
+		//shell_exec('~/java-bulletin/');
+//		shell_exec('java -jar ../../java-bulletin.jar $time');
+//		shell_exec('bash /home/pi/java-bulletin/jstart');
+//		shell_exec('screen -x pi/works -p 0 -X stuff "bash /home/pi/java-bulletin/jstart \015"');
+
+        $connection = ssh2_connect('127.0.0.1', 22);
+        ssh2_auth_password($connection, 'pi', 'andrewclaytondonottouch');
+
+        $stream = ssh2_exec($connection, 'bash /home/pi/java-bulletin/jstart');
+		}
 	}
 
 	if(isset($_POST['submit'])){
@@ -22,15 +57,12 @@
 		// Check if image file is a actual image or fake image
 		$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
 		if($check !== false) {
-			echo "File is an image - " . $check["mime"] . ".";
 			$uploadOk = 1;
 			if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
 				//echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
 			} else {
-				echo "Sorry, there was an error uploading your file.";
 			}
 		} else {
-			echo "File is not an image.";
 			$uploadOk = 0;
 		}
 	}

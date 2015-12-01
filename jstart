@@ -1,0 +1,5 @@
+export DISPLAY=:0.0
+
+java -Xms512M -Xmx512M -jar /home/pi/java-bulletin/java-bulletin.jar 5000 /home/pi/java-bulletin/images
+
+

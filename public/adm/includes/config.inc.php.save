@@ -1,0 +1,18 @@
+<?php
+	//This is the config file
+
+	$site['default'] = "home";
+
+	$db['host'] = "localhost";
+	$db['user'] = "root";
+	$db['pass'] = "
+";
+	$db['name'] = "admin_andrew";
+	$options = [
+		'cost' => 15,
+		'salt' => mcrypt_create_iv(22, MCRYPT_DEV_URANDOM),
+	];
+
+	$dir = "files/";
+	$jar = "java-bulletin.jar";
+?>

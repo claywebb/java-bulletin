@@ -2,7 +2,7 @@
   <div id="modLeft">
         <div class="header">System Manager</div>
         <hr />
-        STATUS IMAGE
+        Current Status: <?php echo $status; ?>
         <br />
         <form action="?p=home" method="post">
           <button type='submit' name='restart' value='Restart' border='0'>RESTART</button>
@@ -10,6 +10,7 @@
         <br />
         <form action="?p=home" method="post">
           <button type='submit' name='start' value='Start' border='0'>START</button>
+	  <input type='text' name='time' value='5000'/>
         </form>
         
         <br />
