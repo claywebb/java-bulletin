@@ -49,10 +49,10 @@ public class Screen extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static final String VERSION = "1.0.2";
+	private static final String VERSION = "1.1.0";
 
 	public static long timeDelay = 5000; // Time spent on each photo in milliseconds
-	public static String dirPath = "public/images"; // The directory of the images you want to load
+	public static String dirPath = "images"; // The directory of the images you want to load
 
 	public static final String[] extensions = { "jpg", "jpeg", "gif", "png" }; // Approved Extensions
 	
@@ -64,6 +64,7 @@ public class Screen extends JPanel {
 	private static JFrame f = new JFrame("Walsh Bulletin");
 	private static MarvinImagePanel imagePanel;
 	private static MarvinImage[] images;
+	private static MarvinImage loading;
 	private static String[] paths;
 			//new String[] {
 //			Screen.class.getResource("../res/1RyLFUf.jpg").getPath(),
@@ -79,6 +80,7 @@ public class Screen extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			System.out.println("Closing...");
 			f.dispatchEvent(new WindowEvent(f, WindowEvent.WINDOW_CLOSING));
 		}
 	};
@@ -97,6 +99,8 @@ public class Screen extends JPanel {
 
 	private void display() throws IOException {
 		// Configure the display
+		long sTime = System.currentTimeMillis();
+		
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		GraphicsDevice dev = env.getDefaultScreenDevice();
 
@@ -119,22 +123,53 @@ public class Screen extends JPanel {
 		// create a new image panel for all of the images
 		imagePanel = new MarvinImagePanel();
 		f.add(imagePanel);
+		
+		dev.setFullScreenWindow(f);
 
+		
+		
+		
 		ArrayList<MarvinImage> tempImages = new ArrayList<MarvinImage>();
+		
+		BufferedImage in;
+		BufferedImage buffImg;
+		
+		int c = 1;
+		
+		showLoading();
+
 
 		for (String s : paths) {
 			// Convert the paths into images and load them into an array
+			long sTime1 = System.currentTimeMillis();
+			long sTime2, sTime3, sTime0;
 			if (isImage(s)) {
 
 				File file = new File(s);
-				BufferedImage in = ImageIO.read(file);
-				BufferedImage buffImg = new BufferedImage(in.getWidth(), in.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
+				in = ImageIO.read(file);
+				
+				sTime0 = (System.currentTimeMillis()-sTime1);
+				System.out.println("     Step "+c+".0 at " + sTime0 + " milliseconds");
+				
+				buffImg = new BufferedImage(in.getWidth(), in.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				
+				sTime2 = (System.currentTimeMillis()-sTime1-sTime0);
+				System.out.println("     Step "+c+".1 at " + sTime2 + " milliseconds");
+				
 				Graphics2D g = buffImg.createGraphics();
 				g.drawImage(in, 0, 0, null);
 				g.dispose();
-
+				
+				sTime3 = (System.currentTimeMillis()-sTime1-sTime2-sTime0);				
+				System.out.println("     Step "+c+".2 at " + sTime3 + " milliseconds");
+				
 				tempImages.add(new MarvinImage(scaleImage(buffImg)));
+				
+				System.out.println("     Step "+c+".3 at " + (System.currentTimeMillis()-sTime1-sTime2-sTime3-sTime0) + " milliseconds");
+
+				in = null;
+				buffImg = null;
+				
 			}
 			if (isPowerPoint(s)) {
 				ArrayList<BufferedImage> imgs = getImagesFromPowerPoint(s);
@@ -143,15 +178,34 @@ public class Screen extends JPanel {
 					tempImages.add(new MarvinImage(b));
 				}
 			}
+			System.out.println("Pic " + c + " completed in " + (System.currentTimeMillis()-sTime1) + " milliseconds");
+			c++;
 		}
 
 		MarvinImage[] temp = new MarvinImage[tempImages.size()];
 		temp = tempImages.toArray(temp);
 		images = temp;
 
-		dev.setFullScreenWindow(f);
 
 		startShow();
+		
+		long fTime = System.currentTimeMillis();
+		
+		System.out.println("Time elapsed: " + (fTime-sTime) +" milliseconds");
+
+	}
+	
+	public static void showLoading() throws IOException{
+		BufferedImage in, buffImg;
+		File f = new File("loading.jpg");
+		in = ImageIO.read(f);
+		buffImg = new BufferedImage(in.getWidth(), in.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = buffImg.createGraphics();
+		g.drawImage(in, 0, 0, null);
+		g.dispose();
+		
+		loading = new MarvinImage(buffImg);
+		imagePanel.setImage(loading);
 
 	}
 
@@ -198,7 +252,7 @@ public class Screen extends JPanel {
 			// Check if the file is a image
 			if (f != null && (isImage(f.getName()) || (isPowerPoint(f.getName())))) {
 				files.add(f.getCanonicalPath());
-				System.out.println("Added " + f.getName() + " to file list!");
+				System.out.println("Added " + f.getName() + " to file list! ("+f.getCanonicalPath()+")");
 			}
 		}
 
@@ -211,14 +265,14 @@ public class Screen extends JPanel {
 	public static boolean isImage(String s) {
 		// if the path ends with any of the approved extensions, return true
 		for (String e : extensions) {
-			if (s.endsWith("." + e))
+			if (s.toLowerCase().endsWith("." + e))
 				return true;
 		}
 		return false;
 	}
 
 	public static boolean isPowerPoint(String s) {
-		if ((s.endsWith(".pptx")) || (s.endsWith(".ppt"))) {
+		if ((s.toLowerCase().endsWith(".pptx")) || (s.toLowerCase().endsWith(".ppt"))) {
 			return true;
 		}
 		return false;
@@ -305,7 +359,7 @@ public class Screen extends JPanel {
 		return a;
 	}
 
-	public static void main(String[] args) {
+	public static void main(final String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 	
 			@Override

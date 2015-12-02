@@ -12,3 +12,6 @@ hs_err_pid*
 /bin/
 public/adm/includes/config.inc.php
 public/includes/config.inc.php
+public/images/
+images/
+log.txt
